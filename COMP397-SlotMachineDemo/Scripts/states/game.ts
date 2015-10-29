@@ -196,15 +196,61 @@
             function afterpull(a, b, c) {
 
                 if (a == b && a == c) {
-                    credits = bet * multiplier;
-                    bet = 0;
-
+    
+                    switch (a)
+                    {
+                        case "blank":
+                            credits = bet;
+                            winnings = bet;
+                            bet = 0;
+                            console.log("credits X 1");
+                            break;
+                        case "grapes":
+                            credits = credits + (bet * 2);
+                            winnings = winnings + (bet * 2);
+                            bet = 0;
+                            console.log("bet X 2");
+                            break;
+                        case "bannana":
+                            credits = credits + (bet * 3);
+                            winnings = winnings + (bet *3);
+                            bet = 0;
+                            console.log("bet X 3");
+                            break;
+                        case "orange":
+                            credits = credits + (bet * 4);
+                            winnings = winnings + (bet * 4);
+                            bet = 0;
+                            console.log("bet X 4");
+                            break;
+                        case "cherry":
+                            credits = credits + (bet * 5);
+                            winnings = winnings + (bet * 5);
+                            bet = 0;
+                            console.log("bet X 5");
+                            break;
+                        case "bar":
+                            credits = credits + (bet * 6);
+                            winnings = winnings + (bet * 6);
+                            bet = 0;
+                            console.log("bet X 6");
+                            break;
+                        case "bell":
+                            credits = credits + (bet * 7);
+                            winnings = winnings + (bet * 7);
+                            bet = 0;
+                            console.log("bet X 7");
+                            break;
+                        case "seven":
+                            credits = credits + jackpot + (bet * 7);
+                            winnings = winnings + jackpot + (bet * 7);
+                            jackpot = 500;
+                            bet = 0;
+                            console.log("bet X 7 + jackpot");
+                            break;
+                    }
                 }
-                else if (JACKPOT) {
-                    credits = credits + jackpot;
-                    jackpot = 500;
-                    bet = 0;
-                }
+               
 
                 else
                 {

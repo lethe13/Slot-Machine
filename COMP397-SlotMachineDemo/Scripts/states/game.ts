@@ -1,4 +1,8 @@
 ﻿module states {
+    var credits = 1000;
+    var jackpot = 500;
+    var bet = 0;
+    var winnings = 0;
     // GAME CLASS
     export class Game extends objects.Scene {
         // PRIVATE INSTANCE VARIABLES
@@ -11,6 +15,7 @@
         private _bet100Button: objects.SpriteButton;
         private _betMaxButton: objects.SpriteButton;
         private _spinButton: objects.SpriteButton;
+      
 
         private _tile1: objects.GameObject;
         private _tile2: objects.GameObject;
@@ -19,24 +24,27 @@
         private _betLine: objects.GameObject;
 
         // GAME VARIABLES
-
+        
         private _spinResult: string[];
-
+        
         // CONSTRUCTOR
         constructor() {
             super();
         }
 
         // PUBLIC METHODS
+         
         public start(): void {
+           
             this._slotMachine = new createjs.Container();
             this._slotMachine.x = 132.5;
-
+            
             this._background = new createjs.Bitmap(assets.getResult("background"));
             this._slotMachine.addChild(this._background); // add background image
 
             this._bet1Button = new objects.SpriteButton("bet1Button", 23, 386);
             this._slotMachine.addChild(this._bet1Button);
+
 
             this._bet10Button = new objects.SpriteButton("bet10Button", 88, 386);
             this._slotMachine.addChild(this._bet10Button);
@@ -67,18 +75,56 @@
 
             // add event listeners
             this._bet1Button.on("click", this._clickBet1Button, this);
-
+            this._bet10Button.on("click", this._clickBet10Button, this);
+            this._bet100Button.on("click", this._clickBet100Button, this);
             this._spinButton.on("click", this._spinButtonClick, this);
+  
         }
 
 
         public update(): void {
         }
-
+        
         // PRIVATE METHODS ++++++++++++++++++++++++++++++++++++++++++++++
         // Callback function / Event Handler for Back Button Click
         private _clickBet1Button(event: createjs.MouseEvent): void {
             console.log("bet 1");
+            if (credits >= 1) {
+                credits--
+                bet++
+            }
+            else if (credits < 1)
+            { window.alert("You cannot bet more than your credits");}
+        }
+        private _clickBet10Button(event: createjs.MouseEvent): void {
+            console.log("bet 10");
+            if (credits >= 10) {
+                credits = credits - 10;
+                bet = bet + 10;
+            }
+            else if (credits < 10)
+            { window.alert("You cannot bet more than your credits"); }
+        }
+        private _clickBet100Button(event: createjs.MouseEvent): void {
+            console.log("bet 100");
+            if (credits >= 100) {
+                credits = credits - 100;
+                bet = bet + 100
+            }
+            else if (credits < 100)
+            { window.alert("You cannot bet more than your credits"); }
+            
+        }
+        private _clickBetMaxButton(event: createjs.MouseEvent): void {
+            console.log("bet ", credits);
+            if (credits > 1) {
+                bet = bet + credits;
+                credits = credits - credits;
+            }
+            else if (credits = 0)
+            { window.alert("You have no credits");}
+            
+            
         }
 
         /* Utility function to check if a value falls within a range of bounds */
@@ -144,6 +190,29 @@
 
 
             console.log(this._spinResult[0] + " - " + this._spinResult[1] + " - " + this._spinResult[2]);
+
+            afterpull(this._spinResult[0], this._spinResult[1], this._spinResult[2]);
+
+            function afterpull(a, b, c) {
+
+                if (a == b && a == c) {
+                    credits = bet * multiplier;
+                    bet = 0;
+
+                }
+                else if (JACKPOT) {
+                    credits = credits + jackpot;
+                    jackpot = 500;
+                    bet = 0;
+                }
+
+                else
+                {
+                    jackpot = jackpot + bet;
+                    bet = 0;
+                }
+
+            }
         }
 
 

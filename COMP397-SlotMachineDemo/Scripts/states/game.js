@@ -5,6 +5,10 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var states;
 (function (states) {
+    var credits = 1000;
+    var jackpot = 500;
+    var bet = 0;
+    var winnings = 0;
     // GAME CLASS
     var Game = (function (_super) {
         __extends(Game, _super);
@@ -40,6 +44,8 @@ var states;
             stage.addChild(this);
             // add event listeners
             this._bet1Button.on("click", this._clickBet1Button, this);
+            this._bet10Button.on("click", this._clickBet10Button, this);
+            this._bet100Button.on("click", this._clickBet100Button, this);
             this._spinButton.on("click", this._spinButtonClick, this);
         };
         Game.prototype.update = function () {
@@ -48,6 +54,43 @@ var states;
         // Callback function / Event Handler for Back Button Click
         Game.prototype._clickBet1Button = function (event) {
             console.log("bet 1");
+            if (credits >= 1) {
+                credits--;
+                bet++;
+            }
+            else if (credits < 1) {
+                window.alert("You cannot bet more than your credits");
+            }
+        };
+        Game.prototype._clickBet10Button = function (event) {
+            console.log("bet 10");
+            if (credits >= 10) {
+                credits = credits - 10;
+                bet = bet + 10;
+            }
+            else if (credits < 10) {
+                window.alert("You cannot bet more than your credits");
+            }
+        };
+        Game.prototype._clickBet100Button = function (event) {
+            console.log("bet 100");
+            if (credits >= 100) {
+                credits = credits - 100;
+                bet = bet + 100;
+            }
+            else if (credits < 100) {
+                window.alert("You cannot bet more than your credits");
+            }
+        };
+        Game.prototype._clickBetMaxButton = function (event) {
+            console.log("bet ", credits);
+            if (credits > 1) {
+                bet = bet + credits;
+                credits = credits - credits;
+            }
+            else if (credits = 0) {
+                window.alert("You have no credits");
+            }
         };
         /* Utility function to check if a value falls within a range of bounds */
         Game.prototype._checkRange = function (value, lowerBounds, upperBounds) {
@@ -104,9 +147,24 @@ var states;
             this._tile2.gotoAndStop(this._spinResult[1]);
             this._tile3.gotoAndStop(this._spinResult[2]);
             console.log(this._spinResult[0] + " - " + this._spinResult[1] + " - " + this._spinResult[2]);
+            afterpull(this._spinResult[0], this._spinResult[1], this._spinResult[2]);
+            function afterpull(a, b, c) {
+                if (a == b && a == c) {
+                    credits = bet * multiplier;
+                    bet = 0;
+                }
+                else if (JACKPOT) {
+                    credits = credits + jackpot;
+                    jackpot = 500;
+                    bet = 0;
+                }
+                else {
+                    jackpot = jackpot + bet;
+                    bet = 0;
+                }
+            }
         };
         return Game;
     })(objects.Scene);
     states.Game = Game;
 })(states || (states = {}));
-//# sourceMappingURL=game.js.map

@@ -57,6 +57,7 @@ var states;
             this._bet100Button.on("click", this._clickBet100Button, this);
             this._betMaxButton.on("click", this._clickbetMaxButton, this);
             this._spinButton.on("click", this._spinButtonClick, this);
+            //buttons
         };
         Game.prototype.update = function () {
             this._credits.text = credits.toString();
@@ -231,5 +232,15 @@ var states;
         return Game;
     })(objects.Scene);
     states.Game = Game;
+    //reset the game
+    function Reset() {
+        credits = 1000;
+        jackpot = 500;
+        bet = 0;
+        winnings = 0;
+    }
+    //exit the game
+    function end() {
+    }
 })(states || (states = {}));
 //# sourceMappingURL=game.js.map

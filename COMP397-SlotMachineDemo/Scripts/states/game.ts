@@ -96,6 +96,8 @@
             this._betMaxButton.on("click", this._clickbetMaxButton, this);
             this._spinButton.on("click", this._spinButtonClick, this);
   
+            //buttons
+          
         }
 
 
@@ -286,8 +288,17 @@
             }
         }
 
-
+      
     }
-
-
+    //reset the game
+    function Reset() {
+       credits = 1000;
+       jackpot = 500;
+       bet = 0;
+       winnings = 0;
+    }
+    //exit the game
+    function end()
+    {
+    }
 } 

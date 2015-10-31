@@ -23,6 +23,10 @@
 
         private _betLine: objects.GameObject;
 
+        private _winnings: objects.Label;
+        private _bet: objects.Label;
+        private _credits: objects.Label;
+        private _jackpot: objects.Label;
         // GAME VARIABLES
         
         private _spinResult: string[];
@@ -73,16 +77,34 @@
             this.addChild(this._slotMachine);
             stage.addChild(this);
 
+
+            //gui labels
+            this._credits = new objects.Label(credits.toString(), "30px Consolas", "#f00", 225, 340, true);
+            stage.addChild(this._credits);
+            this._jackpot = new objects.Label(jackpot.toString(), "30px Consolas", "#f00", 310, 60, true);
+            stage.addChild(this._jackpot);
+            this._bet = new objects.Label(bet.toString(), "30px Consolas", "#f00", 310, 340, true);
+            stage.addChild(this._bet);
+            this._winnings = new objects.Label(winnings.toString(), "30px Consolas", "#f00", 410, 340, true);
+            stage.addChild(this._winnings);
+            
+
             // add event listeners
             this._bet1Button.on("click", this._clickBet1Button, this);
             this._bet10Button.on("click", this._clickBet10Button, this);
             this._bet100Button.on("click", this._clickBet100Button, this);
+            this._betMaxButton.on("click", this._clickbetMaxButton, this);
             this._spinButton.on("click", this._spinButtonClick, this);
   
         }
 
 
         public update(): void {
+            this._credits.text = credits.toString();
+            this._jackpot.text = jackpot.toString();
+            this._bet.text = bet.toString();
+            this._winnings.text = winnings.toString();
+            
         }
         
         // PRIVATE METHODS ++++++++++++++++++++++++++++++++++++++++++++++
@@ -115,16 +137,16 @@
             { window.alert("You cannot bet more than your credits"); }
             
         }
-        private _clickBetMaxButton(event: createjs.MouseEvent): void {
+        private _clickbetMaxButton(event: createjs.MouseEvent): void {
             console.log("bet ", credits);
-            if (credits > 1) {
+            if (credits >= 1) {
                 bet = bet + credits;
-                credits = credits - credits;
+                credits = 0;
             }
             else if (credits = 0)
-            { window.alert("You have no credits");}
-            
-            
+            { window.alert("You have no credits"); }
+
+
         }
 
         /* Utility function to check if a value falls within a range of bounds */
@@ -142,11 +164,11 @@
             outCome[reel] = Math.floor((Math.random() * 65) + 1);
             switch (outCome[reel]) {
                 case this._checkRange(outCome[reel], 1, 27):  // 41.5% probability
-                    betLine[reel] = "blank";
+                    betLine[reel] = "grapes";
                     //blanks++;
                     break;
                 case this._checkRange(outCome[reel], 28, 37): // 15.4% probability
-                    betLine[reel] = "grapes";
+                    betLine[reel] = "cherry";
                     //grapes++;
                     break;
                 case this._checkRange(outCome[reel], 38, 46): // 13.8% probability
@@ -158,41 +180,41 @@
                     //oranges++;
                     break;
                 case this._checkRange(outCome[reel], 55, 59): //  7.7% probability
-                    betLine[reel] = "cherry";
+                    betLine[reel] = "bar";
                     //cherries++;
                     break;
                 case this._checkRange(outCome[reel], 60, 62): //  4.6% probability
-                    betLine[reel] = "bar";
+                    betLine[reel] = "bell";
                     //bars++;
                     break;
-                case this._checkRange(outCome[reel], 63, 64): //  3.1% probability
-                    betLine[reel] = "bell";
+                case this._checkRange(outCome[reel], 63, 65): //  3.1% probability
+                    betLine[reel] = "seven";
                     //bells++;
                     break;
-                case this._checkRange(outCome[reel], 65, 65): //  1.5% probability
-                    betLine[reel] = "seven";
-                    //sevens++;
-                    break;
+
             }
         }
         return betLine;
     }
 
-
+        
 
         //WORKHORSE OF THE GAME
         private _spinButtonClick(event: createjs.MouseEvent): void {
             this._spinResult = this._reels();
+            if (bet > 0) {
+                this._tile1.gotoAndStop(this._spinResult[0]);
+                this._tile2.gotoAndStop(this._spinResult[1]);
+                this._tile3.gotoAndStop(this._spinResult[2]);
 
-            this._tile1.gotoAndStop(this._spinResult[0]);
-            this._tile2.gotoAndStop(this._spinResult[1]);
-            this._tile3.gotoAndStop(this._spinResult[2]);
 
+                console.log(this._spinResult[0] + " - " + this._spinResult[1] + " - " + this._spinResult[2]);
 
-            console.log(this._spinResult[0] + " - " + this._spinResult[1] + " - " + this._spinResult[2]);
-
-            afterpull(this._spinResult[0], this._spinResult[1], this._spinResult[2]);
-
+                afterpull(this._spinResult[0], this._spinResult[1], this._spinResult[2]);
+            }
+            else
+            { alert("Please enter a bet"); }
+            //Winning functionality
             function afterpull(a, b, c) {
 
                 if (a == b && a == c) {
@@ -203,52 +225,55 @@
                             credits = bet;
                             winnings = bet;
                             bet = 0;
-                            console.log("credits X 1");
+                            console.log("credits X 0");
                             break;
                         case "grapes":
                             credits = credits + (bet * 2);
                             winnings = winnings + (bet * 2);
                             bet = 0;
-                            console.log("bet X 2");
+                            console.log("bet X 1");
                             break;
                         case "bannana":
                             credits = credits + (bet * 3);
                             winnings = winnings + (bet *3);
                             bet = 0;
-                            console.log("bet X 3");
+                            console.log("bet X 2");
                             break;
                         case "orange":
                             credits = credits + (bet * 4);
                             winnings = winnings + (bet * 4);
                             bet = 0;
-                            console.log("bet X 4");
+                            console.log("bet X 3");
                             break;
                         case "cherry":
                             credits = credits + (bet * 5);
                             winnings = winnings + (bet * 5);
                             bet = 0;
-                            console.log("bet X 5");
+                            console.log("bet X 4");
                             break;
                         case "bar":
                             credits = credits + (bet * 6);
                             winnings = winnings + (bet * 6);
                             bet = 0;
-                            console.log("bet X 6");
+                            console.log("bet X 5");
                             break;
                         case "bell":
                             credits = credits + (bet * 7);
                             winnings = winnings + (bet * 7);
                             bet = 0;
-                            console.log("bet X 7");
+                            console.log("bet X 6");
                             break;
                         case "seven":
                             credits = credits + jackpot + (bet * 7);
                             winnings = winnings + jackpot + (bet * 7);
                             jackpot = 500;
                             bet = 0;
+                            alert("JACKPOT");
                             console.log("bet X 7 + jackpot");
                             break;
                     }
+                    if (credits == 0)
+                    { alert("YOU LOSE") }
                 }
                
 

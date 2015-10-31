@@ -42,13 +42,27 @@ var states;
             this._slotMachine.addChild(this._betLine);
             this.addChild(this._slotMachine);
             stage.addChild(this);
+            //gui labels
+            this._credits = new objects.Label(credits.toString(), "30px Consolas", "#f00", 225, 340, true);
+            stage.addChild(this._credits);
+            this._jackpot = new objects.Label(jackpot.toString(), "30px Consolas", "#f00", 310, 60, true);
+            stage.addChild(this._jackpot);
+            this._bet = new objects.Label(bet.toString(), "30px Consolas", "#f00", 310, 340, true);
+            stage.addChild(this._bet);
+            this._winnings = new objects.Label(winnings.toString(), "30px Consolas", "#f00", 410, 340, true);
+            stage.addChild(this._winnings);
             // add event listeners
             this._bet1Button.on("click", this._clickBet1Button, this);
             this._bet10Button.on("click", this._clickBet10Button, this);
             this._bet100Button.on("click", this._clickBet100Button, this);
+            this._betMaxButton.on("click", this._clickbetMaxButton, this);
             this._spinButton.on("click", this._spinButtonClick, this);
         };
         Game.prototype.update = function () {
+            this._credits.text = credits.toString();
+            this._jackpot.text = jackpot.toString();
+            this._bet.text = bet.toString();
+            this._winnings.text = winnings.toString();
         };
         // PRIVATE METHODS ++++++++++++++++++++++++++++++++++++++++++++++
         // Callback function / Event Handler for Back Button Click
@@ -82,11 +96,11 @@ var states;
                 window.alert("You cannot bet more than your credits");
             }
         };
-        Game.prototype._clickBetMaxButton = function (event) {
+        Game.prototype._clickbetMaxButton = function (event) {
             console.log("bet ", credits);
-            if (credits > 1) {
+            if (credits >= 1) {
                 bet = bet + credits;
-                credits = credits - credits;
+                credits = 0;
             }
             else if (credits = 0) {
                 window.alert("You have no credits");
@@ -105,11 +119,11 @@ var states;
                 outCome[reel] = Math.floor((Math.random() * 65) + 1);
                 switch (outCome[reel]) {
                     case this._checkRange(outCome[reel], 1, 27):
-                        betLine[reel] = "blank";
+                        betLine[reel] = "grapes";
                         //blanks++;
                         break;
                     case this._checkRange(outCome[reel], 28, 37):
-                        betLine[reel] = "grapes";
+                        betLine[reel] = "cherry";
                         //grapes++;
                         break;
                     case this._checkRange(outCome[reel], 38, 46):
@@ -121,20 +135,16 @@ var states;
                         //oranges++;
                         break;
                     case this._checkRange(outCome[reel], 55, 59):
-                        betLine[reel] = "cherry";
+                        betLine[reel] = "bar";
                         //cherries++;
                         break;
                     case this._checkRange(outCome[reel], 60, 62):
-                        betLine[reel] = "bar";
+                        betLine[reel] = "bell";
                         //bars++;
                         break;
-                    case this._checkRange(outCome[reel], 63, 64):
-                        betLine[reel] = "bell";
-                        //bells++;
-                        break;
-                    case this._checkRange(outCome[reel], 65, 65):
+                    case this._checkRange(outCome[reel], 63, 65):
                         betLine[reel] = "seven";
-                        //sevens++;
+                        //bells++;
                         break;
                 }
             }
@@ -143,11 +153,17 @@ var states;
         //WORKHORSE OF THE GAME
         Game.prototype._spinButtonClick = function (event) {
             this._spinResult = this._reels();
-            this._tile1.gotoAndStop(this._spinResult[0]);
-            this._tile2.gotoAndStop(this._spinResult[1]);
-            this._tile3.gotoAndStop(this._spinResult[2]);
-            console.log(this._spinResult[0] + " - " + this._spinResult[1] + " - " + this._spinResult[2]);
-            afterpull(this._spinResult[0], this._spinResult[1], this._spinResult[2]);
+            if (bet > 0) {
+                this._tile1.gotoAndStop(this._spinResult[0]);
+                this._tile2.gotoAndStop(this._spinResult[1]);
+                this._tile3.gotoAndStop(this._spinResult[2]);
+                console.log(this._spinResult[0] + " - " + this._spinResult[1] + " - " + this._spinResult[2]);
+                afterpull(this._spinResult[0], this._spinResult[1], this._spinResult[2]);
+            }
+            else {
+                alert("Please enter a bet");
+            }
+            //Winning functionality
             function afterpull(a, b, c) {
                 if (a == b && a == c) {
                     switch (a) {
@@ -155,51 +171,55 @@ var states;
                             credits = bet;
                             winnings = bet;
                             bet = 0;
-                            console.log("credits X 1");
+                            console.log("credits X 0");
                             break;
                         case "grapes":
                             credits = credits + (bet * 2);
                             winnings = winnings + (bet * 2);
                             bet = 0;
-                            console.log("bet X 2");
+                            console.log("bet X 1");
                             break;
                         case "bannana":
                             credits = credits + (bet * 3);
                             winnings = winnings + (bet * 3);
                             bet = 0;
-                            console.log("bet X 3");
+                            console.log("bet X 2");
                             break;
                         case "orange":
                             credits = credits + (bet * 4);
                             winnings = winnings + (bet * 4);
                             bet = 0;
-                            console.log("bet X 4");
+                            console.log("bet X 3");
                             break;
                         case "cherry":
                             credits = credits + (bet * 5);
                             winnings = winnings + (bet * 5);
                             bet = 0;
-                            console.log("bet X 5");
+                            console.log("bet X 4");
                             break;
                         case "bar":
                             credits = credits + (bet * 6);
                             winnings = winnings + (bet * 6);
                             bet = 0;
-                            console.log("bet X 6");
+                            console.log("bet X 5");
                             break;
                         case "bell":
                             credits = credits + (bet * 7);
                             winnings = winnings + (bet * 7);
                             bet = 0;
-                            console.log("bet X 7");
+                            console.log("bet X 6");
                             break;
                         case "seven":
                             credits = credits + jackpot + (bet * 7);
                             winnings = winnings + jackpot + (bet * 7);
                             jackpot = 500;
                             bet = 0;
+                            alert("JACKPOT");
                             console.log("bet X 7 + jackpot");
                             break;
+                    }
+                    if (credits == 0) {
+                        alert("YOU LOSE");
                     }
                 }
                 else {
